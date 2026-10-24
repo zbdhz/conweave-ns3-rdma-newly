@@ -4,6 +4,9 @@ This is a Github repository for the SIGCOMM'23 paper "[Network Load Balancing wi
 
 We describe how to run this repository either on docker or using your local machine with `ubuntu:20.04`. 
 
+For the verified native build on Ubuntu 22.04 with GCC 11 and an isolated Python 2
+build environment, see [本机运行说明](NATIVE_RUN.md).
+
 
 ## Run with Docker
 

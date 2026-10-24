@@ -1289,9 +1289,9 @@ int main(int argc, char *argv[]) {
                 printf("size of serverAddress: %lu", serverAddress.size());
                 NS_FATAL_ERROR("An end-host belongs to no link");
             }
+            Settings::hostId2IpMap[i] = serverAddress[i].Get();
+            Settings::hostIp2IdMap[serverAddress[i].Get()] = i;
         }
-        Settings::hostId2IpMap[i] = serverAddress[i].Get();
-        Settings::hostIp2IdMap[serverAddress[i].Get()] = i;
     }
 
     // config switch
