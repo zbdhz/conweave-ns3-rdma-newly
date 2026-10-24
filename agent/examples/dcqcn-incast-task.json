@@ -1,0 +1,97 @@
+{
+  "schema_version": "0.1",
+  "task_id": "dcqcn-incast-v01",
+  "mode": "parameter_only",
+  "request": "在现有 Leaf-Spine 拓扑上降低重复 incast 的流集合完成时间，只调整 DCQCN 参数。",
+  "topology": {
+    "name": "leaf_spine_128_100G_OS2",
+    "file": "config/leaf_spine_128_100G_OS2.txt"
+  },
+  "workload": {
+    "pattern": "repeated_incast",
+    "flow_file": null,
+    "workload_seed": 1,
+    "generator": {
+      "status": "planned",
+      "senders": [0, 1, 2, 3, 16, 17, 18, 19, 32, 33, 34, 35, 48, 49, 50, 51],
+      "receiver": 64,
+      "priority_group": 3,
+      "flow_bytes_per_sender_per_round": 1000000,
+      "rounds": 5,
+      "first_start_s": 0.001,
+      "round_interval_s": 0.002
+    }
+  },
+  "fixed": {
+    "CC_MODE": 1,
+    "LB_MODE": 0,
+    "ENABLE_PFC": 1,
+    "ENABLE_IRN": 0,
+    "BUFFER_SIZE": 9,
+    "ALPHA_RESUME_INTERVAL": 1,
+    "RATE_DECREASE_INTERVAL": 4,
+    "FAST_RECOVERY_TIMES": 1,
+    "CLAMP_TARGET_RATE": 0,
+    "MIN_RATE": "100Mb/s",
+    "RATE_BOUND": 1,
+    "HAS_WIN": 0,
+    "VAR_WIN": 0,
+    "PACKET_PAYLOAD_SIZE": 1000,
+    "L2_ACK_INTERVAL": 1,
+    "KMIN_MAP": "1 100000000000 100",
+    "KMAX_MAP": "1 100000000000 400",
+    "PMAX_MAP": "1 100000000000 0.2"
+  },
+  "tunable": ["EWMA_GAIN", "RP_TIMER", "RATE_AI", "RATE_HAI"],
+  "objective": {
+    "metric": "makespan_ns",
+    "direction": "minimize",
+    "flow_scope": "all_input_flows"
+  },
+  "constraints": {
+    "integrity": {
+      "completion_ratio": 1.0,
+      "same_workload": true
+    },
+    "performance": []
+  },
+  "budget": {
+    "max_candidates": 24,
+    "timeout_s_per_trial": 120
+  },
+  "reproducibility": {
+    "simulation_seeds": [1, 2, 3],
+    "validation_seeds": [11, 12, 13],
+    "flow_hash": null,
+    "source_revision": null
+  },
+  "assumptions": [
+    {
+      "field": "workload.generator",
+      "value": "16 个发送端，每端每轮 1 MB，共 5 轮，使用 PG=3；需要生成 80 条流、共 80000000 字节的输入文件",
+      "reason": "用于构造首个重复 incast 试验，尚未实测其拥塞和参数敏感性"
+    },
+    {
+      "field": "fixed",
+      "value": "ECMP、PFC、ECN 阈值和缓冲等采用当前测试模板配置",
+      "reason": "固定其他机制，便于判断 DCQCN 参数效果；不是已证明最优的配置"
+    },
+    {
+      "field": "budget",
+      "value": {"max_candidates": 24, "timeout_s_per_trial": 120},
+      "reason": "首版预算示例；运行次数还需计入种子、基线和复验，按试跑耗时调整"
+    }
+  ],
+  "open_questions": [
+    {
+      "field": "workload.flow_file",
+      "question": "执行前生成按开始时刻排序的流量文件，核验主机与通信量并冻结哈希。",
+      "blocks_execution": true
+    },
+    {
+      "field": "measurement",
+      "question": "执行前明确仿真截止和排空时间，并确认拥塞反馈、速率变化的记录方式。",
+      "blocks_execution": true
+    }
+  ]
+}

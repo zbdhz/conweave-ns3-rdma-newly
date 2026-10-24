@@ -1,0 +1,3076 @@
+{
+  "purpose": "对开发任务拆分.csv进行依赖与资源可行排期核算；计划数据，不是已完成工作。",
+  "assumptions": {
+    "roles": {
+      "A": "网络C++开发",
+      "B": "Agent与工具开发",
+      "C": "评测与实验"
+    },
+    "daily_capacity_person_days": {
+      "A": 1.0,
+      "B": 1.0,
+      "C": 0.5
+    },
+    "work_days_per_week": 5,
+    "calendar": "相对工作日；D1为项目首个工作日，未指定绝对开工日期；周末、节假日、请假及其他项目占用未映射。",
+    "dependency_type": "所有前置任务均采用FS：前置全部完成后才能开始；无虚构SS依赖。",
+    "task_duration_rule": "duration=max(A_person_days/1, B_person_days/1, C_person_days/0.5)。",
+    "within_task_allocation": "任务持续期间，角色按该角色人日除以任务时长恒定投入；不同角色可在同一任务内并行，允许分数人力。",
+    "day_numbering": "CSV与JSON的start_work_day/end_work_day从1开始，结束日包含当日；duration=end-start+1。",
+    "scheduling_algorithm": "非抢占资源约束列表调度；在事件边界释放已完成任务，按剩余依赖最长路径降序、ID升序检查就绪任务，容量允许即启动。",
+    "not_optimality_claim": "112工作日是一条实际满足所列FS依赖和每日角色容量的可行构造，不声称全局最优。",
+    "limitations": [
+      "每任务最短时长假定任务内角色工作可重叠；如果实现和验收必须内部串行，将增加工期。",
+      "仿真排队、外部审批、数据获取、硬件访问和不可并行等待不单列；发生时可能增加工期。",
+      "估算人日不是统计置信区间；G0实测与各阶段门控后需要滚动更新。",
+      "16人日风险储备单列，未隐含分摊到任务，也不等于固定日历缓冲。",
+      "159净人日加16风险人日是工作量预算，不等于团队连续满员175人日或14周承诺。"
+    ]
+  },
+  "summary": {
+    "tasks": 42,
+    "net_person_days": 159,
+    "role_net_person_days": {
+      "A": 63,
+      "B": 64,
+      "C": 32
+    },
+    "workload_risk_reserve_person_days": 16,
+    "net_plus_workload_reserve_person_days": 175,
+    "precedence_only_lower_bound_work_days": 97,
+    "precedence_only_lower_bound_weeks": 19.4,
+    "resource_feasible_schedule_work_days": 112,
+    "resource_feasible_schedule_weeks": 22.4,
+    "development_baseline_weeks_rounded_up": 23,
+    "calendar_delivery_window_weeks_with_risk": [
+      25,
+      26
+    ],
+    "calendar_risk_note": "25–26周为交付风险窗口，区别于16人日工作量储备；实际日期需结合开工日及节假日映射。",
+    "scope_exclusions": [
+      "硬件部署和hardware_validated证据获取",
+      "任意CC与ConWeave组合所需协议改造"
+    ],
+    "prototype_minimum": "至少一条CC或多路径策略原型可运行；另一条超预算时缩为接口验证并登记延期。"
+  },
+  "precedence_only_critical_path": [
+    "T001",
+    "T002",
+    "T003",
+    "T004",
+    "T006",
+    "T007",
+    "T008",
+    "T009",
+    "T010",
+    "T011",
+    "T013",
+    "T014",
+    "T015",
+    "T016",
+    "T017",
+    "T018",
+    "T019",
+    "T020",
+    "T021",
+    "T023",
+    "T024",
+    "T025",
+    "T027",
+    "T028",
+    "T029",
+    "T030",
+    "T033",
+    "T034",
+    "T035",
+    "T036",
+    "T037",
+    "T039",
+    "T040",
+    "T042"
+  ],
+  "stages": [
+    {
+      "stage": "P0 基线与可行性",
+      "tasks": [
+        "T001",
+        "T002",
+        "T003",
+        "T004",
+        "T005",
+        "T006"
+      ],
+      "start_work_day": 1,
+      "end_work_day": 15,
+      "duration_work_days": 15,
+      "start_week": 1,
+      "end_week": 3,
+      "net_person_days": 20
+    },
+    {
+      "stage": "P1 可信工具与契约",
+      "tasks": [
+        "T007",
+        "T008",
+        "T009",
+        "T010",
+        "T011",
+        "T012",
+        "T013"
+      ],
+      "start_work_day": 16,
+      "end_work_day": 34,
+      "duration_work_days": 19,
+      "start_week": 4,
+      "end_week": 7,
+      "net_person_days": 25
+    },
+    {
+      "stage": "P2 S1–S5参数MVP",
+      "tasks": [
+        "T014",
+        "T015",
+        "T016",
+        "T017",
+        "T018",
+        "T019",
+        "T020"
+      ],
+      "start_work_day": 35,
+      "end_work_day": 51,
+      "duration_work_days": 17,
+      "start_week": 7,
+      "end_week": 11,
+      "net_person_days": 25
+    },
+    {
+      "stage": "P3 双层技能与预算",
+      "tasks": [
+        "T021",
+        "T022",
+        "T023",
+        "T024",
+        "T025",
+        "T026",
+        "T027"
+      ],
+      "start_work_day": 52,
+      "end_work_day": 68,
+      "duration_work_days": 17,
+      "start_week": 11,
+      "end_week": 14,
+      "net_person_days": 25
+    },
+    {
+      "stage": "P4 受限策略原型",
+      "tasks": [
+        "T028",
+        "T029",
+        "T030",
+        "T031",
+        "T032",
+        "T033",
+        "T034",
+        "T035"
+      ],
+      "start_work_day": 69,
+      "end_work_day": 91,
+      "duration_work_days": 23,
+      "start_week": 14,
+      "end_week": 19,
+      "net_person_days": 35
+    },
+    {
+      "stage": "P5 业务验证与交付",
+      "tasks": [
+        "T036",
+        "T037",
+        "T038",
+        "T039",
+        "T040",
+        "T041",
+        "T042"
+      ],
+      "start_work_day": 92,
+      "end_work_day": 112,
+      "duration_work_days": 21,
+      "start_week": 19,
+      "end_week": 23,
+      "net_person_days": 29
+    }
+  ],
+  "tasks": [
+    {
+      "id": "T001",
+      "stage": "P0 基线与可行性",
+      "task": "冻结资料依据、仓库快照与研究范围",
+      "dependencies": [],
+      "allocations_person_days": {
+        "A": 0,
+        "B": 2,
+        "C": 1
+      },
+      "duration_work_days": 2,
+      "start_work_day": 1,
+      "end_work_day": 2,
+      "suggested_weeks": "W1",
+      "daily_allocation_exact": {
+        "A": "0",
+        "B": "1",
+        "C": "1/2"
+      },
+      "precedence_only_earliest_start_day": 1,
+      "precedence_only_earliest_finish_day": 2
+    },
+    {
+      "id": "T002",
+      "stage": "P0 基线与可行性",
+      "task": "隔离工作树与两套工具链复现",
+      "dependencies": [
+        "T001"
+      ],
+      "allocations_person_days": {
+        "A": 2,
+        "B": 2,
+        "C": 0
+      },
+      "duration_work_days": 2,
+      "start_work_day": 3,
+      "end_work_day": 4,
+      "suggested_weeks": "W1",
+      "daily_allocation_exact": {
+        "A": "1",
+        "B": "1",
+        "C": "0"
+      },
+      "precedence_only_earliest_start_day": 3,
+      "precedence_only_earliest_finish_day": 4
+    },
+    {
+      "id": "T003",
+      "stage": "P0 基线与可行性",
+      "task": "复现DCQCN+ECMP基线与容量下界",
+      "dependencies": [
+        "T002"
+      ],
+      "allocations_person_days": {
+        "A": 2,
+        "B": 0,
+        "C": 2
+      },
+      "duration_work_days": 4,
+      "start_work_day": 5,
+      "end_work_day": 8,
+      "suggested_weeks": "W1–W2",
+      "daily_allocation_exact": {
+        "A": "1/2",
+        "B": "0",
+        "C": "1/2"
+      },
+      "precedence_only_earliest_start_day": 5,
+      "precedence_only_earliest_finish_day": 8
+    },
+    {
+      "id": "T004",
+      "stage": "P0 基线与可行性",
+      "task": "最小RDMA正确性及组合能力审计",
+      "dependencies": [
+        "T003"
+      ],
+      "allocations_person_days": {
+        "A": 2,
+        "B": 0,
+        "C": 1
+      },
+      "duration_work_days": 2,
+      "start_work_day": 9,
+      "end_work_day": 10,
+      "suggested_weeks": "W2",
+      "daily_allocation_exact": {
+        "A": "1",
+        "B": "0",
+        "C": "1/2"
+      },
+      "precedence_only_earliest_start_day": 9,
+      "precedence_only_earliest_finish_day": 10
+    },
+    {
+      "id": "T005",
+      "stage": "P0 基线与可行性",
+      "task": "仿真性能pilot与原规模预算估算",
+      "dependencies": [
+        "T003"
+      ],
+      "allocations_person_days": {
+        "A": 2,
+        "B": 1,
+        "C": 0
+      },
+      "duration_work_days": 2,
+      "start_work_day": 11,
+      "end_work_day": 12,
+      "suggested_weeks": "W3",
+      "daily_allocation_exact": {
+        "A": "1",
+        "B": "1/2",
+        "C": "0"
+      },
+      "precedence_only_earliest_start_day": 9,
+      "precedence_only_earliest_finish_day": 10
+    },
+    {
+      "id": "T006",
+      "stage": "P0 基线与可行性",
+      "task": "审计集合通信后端DAG并执行G0门控",
+      "dependencies": [
+        "T001",
+        "T002",
+        "T003",
+        "T004",
+        "T005"
+      ],
+      "allocations_person_days": {
+        "A": 0,
+        "B": 3,
+        "C": 0
+      },
+      "duration_work_days": 3,
+      "start_work_day": 13,
+      "end_work_day": 15,
+      "suggested_weeks": "W3",
+      "daily_allocation_exact": {
+        "A": "0",
+        "B": "1",
+        "C": "0"
+      },
+      "precedence_only_earliest_start_day": 11,
+      "precedence_only_earliest_finish_day": 13
+    },
+    {
+      "id": "T007",
+      "stage": "P1 可信工具与契约",
+      "task": "定义RequirementSpec/CapabilityProfile/IR契约",
+      "dependencies": [
+        "T006"
+      ],
+      "allocations_person_days": {
+        "A": 0,
+        "B": 3,
+        "C": 1
+      },
+      "duration_work_days": 3,
+      "start_work_day": 16,
+      "end_work_day": 18,
+      "suggested_weeks": "W4",
+      "daily_allocation_exact": {
+        "A": "0",
+        "B": "1",
+        "C": "1/3"
+      },
+      "precedence_only_earliest_start_day": 14,
+      "precedence_only_earliest_finish_day": 16
+    },
+    {
+      "id": "T008",
+      "stage": "P1 可信工具与契约",
+      "task": "实现ConWeave配置适配与组合预检",
+      "dependencies": [
+        "T006",
+        "T007"
+      ],
+      "allocations_person_days": {
+        "A": 2,
+        "B": 2,
+        "C": 0
+      },
+      "duration_work_days": 2,
+      "start_work_day": 19,
+      "end_work_day": 20,
+      "suggested_weeks": "W4",
+      "daily_allocation_exact": {
+        "A": "1",
+        "B": "1",
+        "C": "0"
+      },
+      "precedence_only_earliest_start_day": 17,
+      "precedence_only_earliest_finish_day": 18
+    },
+    {
+      "id": "T009",
+      "stage": "P1 可信工具与契约",
+      "task": "补齐交换机/CC/路径可信遥测",
+      "dependencies": [
+        "T004",
+        "T008"
+      ],
+      "allocations_person_days": {
+        "A": 3,
+        "B": 1,
+        "C": 0
+      },
+      "duration_work_days": 3,
+      "start_work_day": 21,
+      "end_work_day": 23,
+      "suggested_weeks": "W5",
+      "daily_allocation_exact": {
+        "A": "1",
+        "B": "1/3",
+        "C": "0"
+      },
+      "precedence_only_earliest_start_day": 19,
+      "precedence_only_earliest_finish_day": 21
+    },
+    {
+      "id": "T010",
+      "stage": "P1 可信工具与契约",
+      "task": "固化完整性评价器与目标计算",
+      "dependencies": [
+        "T007",
+        "T009"
+      ],
+      "allocations_person_days": {
+        "A": 2,
+        "B": 0,
+        "C": 1
+      },
+      "duration_work_days": 2,
+      "start_work_day": 24,
+      "end_work_day": 25,
+      "suggested_weeks": "W5",
+      "daily_allocation_exact": {
+        "A": "1",
+        "B": "0",
+        "C": "1/2"
+      },
+      "precedence_only_earliest_start_day": 22,
+      "precedence_only_earliest_finish_day": 23
+    },
+    {
+      "id": "T011",
+      "stage": "P1 可信工具与契约",
+      "task": "统计规范、配对seed及留出拆分",
+      "dependencies": [
+        "T007",
+        "T010"
+      ],
+      "allocations_person_days": {
+        "A": 0,
+        "B": 0,
+        "C": 3
+      },
+      "duration_work_days": 6,
+      "start_work_day": 26,
+      "end_work_day": 31,
+      "suggested_weeks": "W6–W7",
+      "daily_allocation_exact": {
+        "A": "0",
+        "B": "0",
+        "C": "1/2"
+      },
+      "precedence_only_earliest_start_day": 24,
+      "precedence_only_earliest_finish_day": 29
+    },
+    {
+      "id": "T012",
+      "stage": "P1 可信工具与契约",
+      "task": "实现隔离运行器、恢复与证据索引",
+      "dependencies": [
+        "T008",
+        "T009"
+      ],
+      "allocations_person_days": {
+        "A": 3,
+        "B": 1,
+        "C": 0
+      },
+      "duration_work_days": 3,
+      "start_work_day": 26,
+      "end_work_day": 28,
+      "suggested_weeks": "W6",
+      "daily_allocation_exact": {
+        "A": "1",
+        "B": "1/3",
+        "C": "0"
+      },
+      "precedence_only_earliest_start_day": 22,
+      "precedence_only_earliest_finish_day": 24
+    },
+    {
+      "id": "T013",
+      "stage": "P1 可信工具与契约",
+      "task": "G1可信实验链验收",
+      "dependencies": [
+        "T007",
+        "T008",
+        "T009",
+        "T010",
+        "T011",
+        "T012"
+      ],
+      "allocations_person_days": {
+        "A": 0,
+        "B": 3,
+        "C": 0
+      },
+      "duration_work_days": 3,
+      "start_work_day": 32,
+      "end_work_day": 34,
+      "suggested_weeks": "W7",
+      "daily_allocation_exact": {
+        "A": "0",
+        "B": "1",
+        "C": "0"
+      },
+      "precedence_only_earliest_start_day": 30,
+      "precedence_only_earliest_finish_day": 32
+    },
+    {
+      "id": "T014",
+      "stage": "P2 S1–S5参数MVP",
+      "task": "S1需求解析与任务状态机",
+      "dependencies": [
+        "T013"
+      ],
+      "allocations_person_days": {
+        "A": 0,
+        "B": 2,
+        "C": 1
+      },
+      "duration_work_days": 2,
+      "start_work_day": 35,
+      "end_work_day": 36,
+      "suggested_weeks": "W7–W8",
+      "daily_allocation_exact": {
+        "A": "0",
+        "B": "1",
+        "C": "1/2"
+      },
+      "precedence_only_earliest_start_day": 33,
+      "precedence_only_earliest_finish_day": 34
+    },
+    {
+      "id": "T015",
+      "stage": "P2 S1–S5参数MVP",
+      "task": "S2结构化检索与合法候选组合",
+      "dependencies": [
+        "T014"
+      ],
+      "allocations_person_days": {
+        "A": 0,
+        "B": 3,
+        "C": 1
+      },
+      "duration_work_days": 3,
+      "start_work_day": 37,
+      "end_work_day": 39,
+      "suggested_weeks": "W8",
+      "daily_allocation_exact": {
+        "A": "0",
+        "B": "1",
+        "C": "1/3"
+      },
+      "precedence_only_earliest_start_day": 35,
+      "precedence_only_earliest_finish_day": 37
+    },
+    {
+      "id": "T016",
+      "stage": "P2 S1–S5参数MVP",
+      "task": "S3静态多维评价与初始配额",
+      "dependencies": [
+        "T015"
+      ],
+      "allocations_person_days": {
+        "A": 2,
+        "B": 2,
+        "C": 0
+      },
+      "duration_work_days": 2,
+      "start_work_day": 40,
+      "end_work_day": 41,
+      "suggested_weeks": "W8–W9",
+      "daily_allocation_exact": {
+        "A": "1",
+        "B": "1",
+        "C": "0"
+      },
+      "precedence_only_earliest_start_day": 38,
+      "precedence_only_earliest_finish_day": 39
+    },
+    {
+      "id": "T017",
+      "stage": "P2 S1–S5参数MVP",
+      "task": "S4参数提案—运行—诊断闭环",
+      "dependencies": [
+        "T016",
+        "T012"
+      ],
+      "allocations_person_days": {
+        "A": 1,
+        "B": 2,
+        "C": 0
+      },
+      "duration_work_days": 2,
+      "start_work_day": 42,
+      "end_work_day": 43,
+      "suggested_weeks": "W9",
+      "daily_allocation_exact": {
+        "A": "1/2",
+        "B": "1",
+        "C": "0"
+      },
+      "precedence_only_earliest_start_day": 40,
+      "precedence_only_earliest_finish_day": 41
+    },
+    {
+      "id": "T018",
+      "stage": "P2 S1–S5参数MVP",
+      "task": "DCQCN+ECN理论边界与小型搜索",
+      "dependencies": [
+        "T017"
+      ],
+      "allocations_person_days": {
+        "A": 3,
+        "B": 0,
+        "C": 1
+      },
+      "duration_work_days": 3,
+      "start_work_day": 44,
+      "end_work_day": 46,
+      "suggested_weeks": "W9–W10",
+      "daily_allocation_exact": {
+        "A": "1",
+        "B": "0",
+        "C": "1/3"
+      },
+      "precedence_only_earliest_start_day": 42,
+      "precedence_only_earliest_finish_day": 44
+    },
+    {
+      "id": "T019",
+      "stage": "P2 S1–S5参数MVP",
+      "task": "S5交付及失败说明模板",
+      "dependencies": [
+        "T017",
+        "T018"
+      ],
+      "allocations_person_days": {
+        "A": 3,
+        "B": 0,
+        "C": 1
+      },
+      "duration_work_days": 3,
+      "start_work_day": 47,
+      "end_work_day": 49,
+      "suggested_weeks": "W10",
+      "daily_allocation_exact": {
+        "A": "1",
+        "B": "0",
+        "C": "1/3"
+      },
+      "precedence_only_earliest_start_day": 45,
+      "precedence_only_earliest_finish_day": 47
+    },
+    {
+      "id": "T020",
+      "stage": "P2 S1–S5参数MVP",
+      "task": "G2参数MVP端到端验收",
+      "dependencies": [
+        "T014",
+        "T015",
+        "T016",
+        "T017",
+        "T018",
+        "T019"
+      ],
+      "allocations_person_days": {
+        "A": 1,
+        "B": 1,
+        "C": 1
+      },
+      "duration_work_days": 2,
+      "start_work_day": 50,
+      "end_work_day": 51,
+      "suggested_weeks": "W10–W11",
+      "daily_allocation_exact": {
+        "A": "1/2",
+        "B": "1/2",
+        "C": "1/2"
+      },
+      "precedence_only_earliest_start_day": 48,
+      "precedence_only_earliest_finish_day": 49
+    },
+    {
+      "id": "T021",
+      "stage": "P3 双层技能与预算",
+      "task": "底层机制/配置/理论/反例技能库",
+      "dependencies": [
+        "T020"
+      ],
+      "allocations_person_days": {
+        "A": 0,
+        "B": 3,
+        "C": 1
+      },
+      "duration_work_days": 3,
+      "start_work_day": 52,
+      "end_work_day": 54,
+      "suggested_weeks": "W11",
+      "daily_allocation_exact": {
+        "A": "0",
+        "B": "1",
+        "C": "1/3"
+      },
+      "precedence_only_earliest_start_day": 50,
+      "precedence_only_earliest_finish_day": 52
+    },
+    {
+      "id": "T022",
+      "stage": "P3 双层技能与预算",
+      "task": "上层S1–S5工作流技能复用",
+      "dependencies": [
+        "T021"
+      ],
+      "allocations_person_days": {
+        "A": 0,
+        "B": 2,
+        "C": 1
+      },
+      "duration_work_days": 2,
+      "start_work_day": 60,
+      "end_work_day": 61,
+      "suggested_weeks": "W12–W13",
+      "daily_allocation_exact": {
+        "A": "0",
+        "B": "1",
+        "C": "1/2"
+      },
+      "precedence_only_earliest_start_day": 53,
+      "precedence_only_earliest_finish_day": 54
+    },
+    {
+      "id": "T023",
+      "stage": "P3 双层技能与预算",
+      "task": "多候选预算账本及公平调度",
+      "dependencies": [
+        "T020",
+        "T021"
+      ],
+      "allocations_person_days": {
+        "A": 2,
+        "B": 2,
+        "C": 0
+      },
+      "duration_work_days": 2,
+      "start_work_day": 55,
+      "end_work_day": 56,
+      "suggested_weeks": "W11–W12",
+      "daily_allocation_exact": {
+        "A": "1",
+        "B": "1",
+        "C": "0"
+      },
+      "precedence_only_earliest_start_day": 53,
+      "precedence_only_earliest_finish_day": 54
+    },
+    {
+      "id": "T024",
+      "stage": "P3 双层技能与预算",
+      "task": "瓶颈机制和层次结构代理构造",
+      "dependencies": [
+        "T005",
+        "T011",
+        "T023"
+      ],
+      "allocations_person_days": {
+        "A": 3,
+        "B": 0,
+        "C": 1
+      },
+      "duration_work_days": 3,
+      "start_work_day": 57,
+      "end_work_day": 59,
+      "suggested_weeks": "W12",
+      "daily_allocation_exact": {
+        "A": "1",
+        "B": "0",
+        "C": "1/3"
+      },
+      "precedence_only_earliest_start_day": 55,
+      "precedence_only_earliest_finish_day": 57
+    },
+    {
+      "id": "T025",
+      "stage": "P3 双层技能与预算",
+      "task": "多保真晋升与代理错杀审计",
+      "dependencies": [
+        "T023",
+        "T024"
+      ],
+      "allocations_person_days": {
+        "A": 3,
+        "B": 0,
+        "C": 1
+      },
+      "duration_work_days": 3,
+      "start_work_day": 62,
+      "end_work_day": 64,
+      "suggested_weeks": "W13",
+      "daily_allocation_exact": {
+        "A": "1",
+        "B": "0",
+        "C": "1/3"
+      },
+      "precedence_only_earliest_start_day": 58,
+      "precedence_only_earliest_finish_day": 60
+    },
+    {
+      "id": "T026",
+      "stage": "P3 双层技能与预算",
+      "task": "建立等预算复用对照与最小消融",
+      "dependencies": [
+        "T021",
+        "T022",
+        "T023"
+      ],
+      "allocations_person_days": {
+        "A": 2,
+        "B": 1,
+        "C": 0
+      },
+      "duration_work_days": 2,
+      "start_work_day": 65,
+      "end_work_day": 66,
+      "suggested_weeks": "W13–W14",
+      "daily_allocation_exact": {
+        "A": "1",
+        "B": "1/2",
+        "C": "0"
+      },
+      "precedence_only_earliest_start_day": 55,
+      "precedence_only_earliest_finish_day": 56
+    },
+    {
+      "id": "T027",
+      "stage": "P3 双层技能与预算",
+      "task": "G3技能与多保真链验收",
+      "dependencies": [
+        "T021",
+        "T022",
+        "T023",
+        "T024",
+        "T025",
+        "T026"
+      ],
+      "allocations_person_days": {
+        "A": 0,
+        "B": 2,
+        "C": 1
+      },
+      "duration_work_days": 2,
+      "start_work_day": 67,
+      "end_work_day": 68,
+      "suggested_weeks": "W14",
+      "daily_allocation_exact": {
+        "A": "0",
+        "B": "1",
+        "C": "1/2"
+      },
+      "precedence_only_earliest_start_day": 61,
+      "precedence_only_earliest_finish_day": 62
+    },
+    {
+      "id": "T028",
+      "stage": "P4 受限策略原型",
+      "task": "ControllerIR/策略core与后端边界",
+      "dependencies": [
+        "T027"
+      ],
+      "allocations_person_days": {
+        "A": 3,
+        "B": 1,
+        "C": 0
+      },
+      "duration_work_days": 3,
+      "start_work_day": 69,
+      "end_work_day": 71,
+      "suggested_weeks": "W14–W15",
+      "daily_allocation_exact": {
+        "A": "1",
+        "B": "1/3",
+        "C": "0"
+      },
+      "precedence_only_earliest_start_day": 63,
+      "precedence_only_earliest_finish_day": 65
+    },
+    {
+      "id": "T029",
+      "stage": "P4 受限策略原型",
+      "task": "CC事件适配与生命周期回归",
+      "dependencies": [
+        "T028"
+      ],
+      "allocations_person_days": {
+        "A": 3,
+        "B": 1,
+        "C": 0
+      },
+      "duration_work_days": 3,
+      "start_work_day": 72,
+      "end_work_day": 74,
+      "suggested_weeks": "W15",
+      "daily_allocation_exact": {
+        "A": "1",
+        "B": "1/3",
+        "C": "0"
+      },
+      "precedence_only_earliest_start_day": 66,
+      "precedence_only_earliest_finish_day": 68
+    },
+    {
+      "id": "T030",
+      "stage": "P4 受限策略原型",
+      "task": "实现一条有界RNIC CC策略原型",
+      "dependencies": [
+        "T028",
+        "T029"
+      ],
+      "allocations_person_days": {
+        "A": 3,
+        "B": 1,
+        "C": 1
+      },
+      "duration_work_days": 3,
+      "start_work_day": 75,
+      "end_work_day": 77,
+      "suggested_weeks": "W15–W16",
+      "daily_allocation_exact": {
+        "A": "1",
+        "B": "1/3",
+        "C": "1/3"
+      },
+      "precedence_only_earliest_start_day": 69,
+      "precedence_only_earliest_finish_day": 71
+    },
+    {
+      "id": "T031",
+      "stage": "P4 受限策略原型",
+      "task": "实现受限多路径规则并核对重排成本",
+      "dependencies": [
+        "T028",
+        "T009"
+      ],
+      "allocations_person_days": {
+        "A": 3,
+        "B": 1,
+        "C": 1
+      },
+      "duration_work_days": 3,
+      "start_work_day": 78,
+      "end_work_day": 80,
+      "suggested_weeks": "W16",
+      "daily_allocation_exact": {
+        "A": "1",
+        "B": "1/3",
+        "C": "1/3"
+      },
+      "precedence_only_earliest_start_day": 66,
+      "precedence_only_earliest_finish_day": 68
+    },
+    {
+      "id": "T032",
+      "stage": "P4 受限策略原型",
+      "task": "受限代码生成、编译和修改范围验证",
+      "dependencies": [
+        "T028",
+        "T029"
+      ],
+      "allocations_person_days": {
+        "A": 1,
+        "B": 2,
+        "C": 1
+      },
+      "duration_work_days": 2,
+      "start_work_day": 81,
+      "end_work_day": 82,
+      "suggested_weeks": "W17",
+      "daily_allocation_exact": {
+        "A": "1/2",
+        "B": "1",
+        "C": "1/2"
+      },
+      "precedence_only_earliest_start_day": 69,
+      "precedence_only_earliest_finish_day": 70
+    },
+    {
+      "id": "T033",
+      "stage": "P4 受限策略原型",
+      "task": "受控failure与恢复微基准",
+      "dependencies": [
+        "T030",
+        "T031",
+        "T032"
+      ],
+      "allocations_person_days": {
+        "A": 1,
+        "B": 2,
+        "C": 1
+      },
+      "duration_work_days": 2,
+      "start_work_day": 83,
+      "end_work_day": 84,
+      "suggested_weeks": "W17",
+      "daily_allocation_exact": {
+        "A": "1/2",
+        "B": "1",
+        "C": "1/2"
+      },
+      "precedence_only_earliest_start_day": 72,
+      "precedence_only_earliest_finish_day": 73
+    },
+    {
+      "id": "T034",
+      "stage": "P4 受限策略原型",
+      "task": "CC×交换机×多路径受控联合微基准",
+      "dependencies": [
+        "T030",
+        "T031",
+        "T033"
+      ],
+      "allocations_person_days": {
+        "A": 0,
+        "B": 3,
+        "C": 2
+      },
+      "duration_work_days": 4,
+      "start_work_day": 85,
+      "end_work_day": 88,
+      "suggested_weeks": "W17–W18",
+      "daily_allocation_exact": {
+        "A": "0",
+        "B": "3/4",
+        "C": "1/2"
+      },
+      "precedence_only_earliest_start_day": 74,
+      "precedence_only_earliest_finish_day": 77
+    },
+    {
+      "id": "T035",
+      "stage": "P4 受限策略原型",
+      "task": "G4原型门控及跨后端范围冻结",
+      "dependencies": [
+        "T028",
+        "T029",
+        "T030",
+        "T031",
+        "T032",
+        "T033",
+        "T034"
+      ],
+      "allocations_person_days": {
+        "A": 0,
+        "B": 3,
+        "C": 1
+      },
+      "duration_work_days": 3,
+      "start_work_day": 89,
+      "end_work_day": 91,
+      "suggested_weeks": "W18–W19",
+      "daily_allocation_exact": {
+        "A": "0",
+        "B": "1",
+        "C": "1/3"
+      },
+      "precedence_only_earliest_start_day": 78,
+      "precedence_only_earliest_finish_day": 80
+    },
+    {
+      "id": "T036",
+      "stage": "P5 业务验证与交付",
+      "task": "锁定Alibaba后端参数与小机制适配",
+      "dependencies": [
+        "T035",
+        "T006"
+      ],
+      "allocations_person_days": {
+        "A": 3,
+        "B": 1,
+        "C": 0
+      },
+      "duration_work_days": 3,
+      "start_work_day": 92,
+      "end_work_day": 94,
+      "suggested_weeks": "W19",
+      "daily_allocation_exact": {
+        "A": "1",
+        "B": "1/3",
+        "C": "0"
+      },
+      "precedence_only_earliest_start_day": 81,
+      "precedence_only_earliest_finish_day": 83
+    },
+    {
+      "id": "T037",
+      "stage": "P5 业务验证与交付",
+      "task": "跨后端语义对照及条件化校准",
+      "dependencies": [
+        "T036",
+        "T011"
+      ],
+      "allocations_person_days": {
+        "A": 2,
+        "B": 1,
+        "C": 1
+      },
+      "duration_work_days": 2,
+      "start_work_day": 95,
+      "end_work_day": 96,
+      "suggested_weeks": "W19–W20",
+      "daily_allocation_exact": {
+        "A": "1",
+        "B": "1/2",
+        "C": "1/2"
+      },
+      "precedence_only_earliest_start_day": 84,
+      "precedence_only_earliest_finish_day": 85
+    },
+    {
+      "id": "T038",
+      "stage": "P5 业务验证与交付",
+      "task": "固定集合通信DAG接入与完成语义验证",
+      "dependencies": [
+        "T036",
+        "T006"
+      ],
+      "allocations_person_days": {
+        "A": 2,
+        "B": 2,
+        "C": 0
+      },
+      "duration_work_days": 2,
+      "start_work_day": 97,
+      "end_work_day": 98,
+      "suggested_weeks": "W20",
+      "daily_allocation_exact": {
+        "A": "1",
+        "B": "1",
+        "C": "0"
+      },
+      "precedence_only_earliest_start_day": 84,
+      "precedence_only_earliest_finish_day": 85
+    },
+    {
+      "id": "T039",
+      "stage": "P5 业务验证与交付",
+      "task": "冻结候选原规模独立复验",
+      "dependencies": [
+        "T035",
+        "T037",
+        "T038"
+      ],
+      "allocations_person_days": {
+        "A": 2,
+        "B": 1,
+        "C": 1
+      },
+      "duration_work_days": 2,
+      "start_work_day": 99,
+      "end_work_day": 100,
+      "suggested_weeks": "W20",
+      "daily_allocation_exact": {
+        "A": "1",
+        "B": "1/2",
+        "C": "1/2"
+      },
+      "precedence_only_earliest_start_day": 86,
+      "precedence_only_earliest_finish_day": 87
+    },
+    {
+      "id": "T040",
+      "stage": "P5 业务验证与交付",
+      "task": "留出任务、独立seed与负迁移评估",
+      "dependencies": [
+        "T039",
+        "T011",
+        "T026"
+      ],
+      "allocations_person_days": {
+        "A": 1,
+        "B": 1,
+        "C": 3
+      },
+      "duration_work_days": 6,
+      "start_work_day": 101,
+      "end_work_day": 106,
+      "suggested_weeks": "W21–W22",
+      "daily_allocation_exact": {
+        "A": "1/6",
+        "B": "1/6",
+        "C": "1/2"
+      },
+      "precedence_only_earliest_start_day": 88,
+      "precedence_only_earliest_finish_day": 93
+    },
+    {
+      "id": "T041",
+      "stage": "P5 业务验证与交付",
+      "task": "等预算成本消融与收益结论",
+      "dependencies": [
+        "T039",
+        "T026"
+      ],
+      "allocations_person_days": {
+        "A": 1,
+        "B": 2,
+        "C": 1
+      },
+      "duration_work_days": 2,
+      "start_work_day": 107,
+      "end_work_day": 108,
+      "suggested_weeks": "W22",
+      "daily_allocation_exact": {
+        "A": "1/2",
+        "B": "1",
+        "C": "1/2"
+      },
+      "precedence_only_earliest_start_day": 88,
+      "precedence_only_earliest_finish_day": 89
+    },
+    {
+      "id": "T042",
+      "stage": "P5 业务验证与交付",
+      "task": "G5交付复演、技能候选与后续路线",
+      "dependencies": [
+        "T036",
+        "T037",
+        "T038",
+        "T039",
+        "T040",
+        "T041"
+      ],
+      "allocations_person_days": {
+        "A": 0,
+        "B": 4,
+        "C": 0
+      },
+      "duration_work_days": 4,
+      "start_work_day": 109,
+      "end_work_day": 112,
+      "suggested_weeks": "W22–W23",
+      "daily_allocation_exact": {
+        "A": "0",
+        "B": "1",
+        "C": "0"
+      },
+      "precedence_only_earliest_start_day": 94,
+      "precedence_only_earliest_finish_day": 97
+    }
+  ],
+  "daily_capacity_audit": [
+    {
+      "work_day": 1,
+      "tasks": [
+        "T001"
+      ],
+      "allocated_person_days": {
+        "A": 0.0,
+        "B": 1.0,
+        "C": 0.5
+      },
+      "allocated_exact": {
+        "A": "0",
+        "B": "1",
+        "C": "1/2"
+      }
+    },
+    {
+      "work_day": 2,
+      "tasks": [
+        "T001"
+      ],
+      "allocated_person_days": {
+        "A": 0.0,
+        "B": 1.0,
+        "C": 0.5
+      },
+      "allocated_exact": {
+        "A": "0",
+        "B": "1",
+        "C": "1/2"
+      }
+    },
+    {
+      "work_day": 3,
+      "tasks": [
+        "T002"
+      ],
+      "allocated_person_days": {
+        "A": 1.0,
+        "B": 1.0,
+        "C": 0.0
+      },
+      "allocated_exact": {
+        "A": "1",
+        "B": "1",
+        "C": "0"
+      }
+    },
+    {
+      "work_day": 4,
+      "tasks": [
+        "T002"
+      ],
+      "allocated_person_days": {
+        "A": 1.0,
+        "B": 1.0,
+        "C": 0.0
+      },
+      "allocated_exact": {
+        "A": "1",
+        "B": "1",
+        "C": "0"
+      }
+    },
+    {
+      "work_day": 5,
+      "tasks": [
+        "T003"
+      ],
+      "allocated_person_days": {
+        "A": 0.5,
+        "B": 0.0,
+        "C": 0.5
+      },
+      "allocated_exact": {
+        "A": "1/2",
+        "B": "0",
+        "C": "1/2"
+      }
+    },
+    {
+      "work_day": 6,
+      "tasks": [
+        "T003"
+      ],
+      "allocated_person_days": {
+        "A": 0.5,
+        "B": 0.0,
+        "C": 0.5
+      },
+      "allocated_exact": {
+        "A": "1/2",
+        "B": "0",
+        "C": "1/2"
+      }
+    },
+    {
+      "work_day": 7,
+      "tasks": [
+        "T003"
+      ],
+      "allocated_person_days": {
+        "A": 0.5,
+        "B": 0.0,
+        "C": 0.5
+      },
+      "allocated_exact": {
+        "A": "1/2",
+        "B": "0",
+        "C": "1/2"
+      }
+    },
+    {
+      "work_day": 8,
+      "tasks": [
+        "T003"
+      ],
+      "allocated_person_days": {
+        "A": 0.5,
+        "B": 0.0,
+        "C": 0.5
+      },
+      "allocated_exact": {
+        "A": "1/2",
+        "B": "0",
+        "C": "1/2"
+      }
+    },
+    {
+      "work_day": 9,
+      "tasks": [
+        "T004"
+      ],
+      "allocated_person_days": {
+        "A": 1.0,
+        "B": 0.0,
+        "C": 0.5
+      },
+      "allocated_exact": {
+        "A": "1",
+        "B": "0",
+        "C": "1/2"
+      }
+    },
+    {
+      "work_day": 10,
+      "tasks": [
+        "T004"
+      ],
+      "allocated_person_days": {
+        "A": 1.0,
+        "B": 0.0,
+        "C": 0.5
+      },
+      "allocated_exact": {
+        "A": "1",
+        "B": "0",
+        "C": "1/2"
+      }
+    },
+    {
+      "work_day": 11,
+      "tasks": [
+        "T005"
+      ],
+      "allocated_person_days": {
+        "A": 1.0,
+        "B": 0.5,
+        "C": 0.0
+      },
+      "allocated_exact": {
+        "A": "1",
+        "B": "1/2",
+        "C": "0"
+      }
+    },
+    {
+      "work_day": 12,
+      "tasks": [
+        "T005"
+      ],
+      "allocated_person_days": {
+        "A": 1.0,
+        "B": 0.5,
+        "C": 0.0
+      },
+      "allocated_exact": {
+        "A": "1",
+        "B": "1/2",
+        "C": "0"
+      }
+    },
+    {
+      "work_day": 13,
+      "tasks": [
+        "T006"
+      ],
+      "allocated_person_days": {
+        "A": 0.0,
+        "B": 1.0,
+        "C": 0.0
+      },
+      "allocated_exact": {
+        "A": "0",
+        "B": "1",
+        "C": "0"
+      }
+    },
+    {
+      "work_day": 14,
+      "tasks": [
+        "T006"
+      ],
+      "allocated_person_days": {
+        "A": 0.0,
+        "B": 1.0,
+        "C": 0.0
+      },
+      "allocated_exact": {
+        "A": "0",
+        "B": "1",
+        "C": "0"
+      }
+    },
+    {
+      "work_day": 15,
+      "tasks": [
+        "T006"
+      ],
+      "allocated_person_days": {
+        "A": 0.0,
+        "B": 1.0,
+        "C": 0.0
+      },
+      "allocated_exact": {
+        "A": "0",
+        "B": "1",
+        "C": "0"
+      }
+    },
+    {
+      "work_day": 16,
+      "tasks": [
+        "T007"
+      ],
+      "allocated_person_days": {
+        "A": 0.0,
+        "B": 1.0,
+        "C": 0.3333333333333333
+      },
+      "allocated_exact": {
+        "A": "0",
+        "B": "1",
+        "C": "1/3"
+      }
+    },
+    {
+      "work_day": 17,
+      "tasks": [
+        "T007"
+      ],
+      "allocated_person_days": {
+        "A": 0.0,
+        "B": 1.0,
+        "C": 0.3333333333333333
+      },
+      "allocated_exact": {
+        "A": "0",
+        "B": "1",
+        "C": "1/3"
+      }
+    },
+    {
+      "work_day": 18,
+      "tasks": [
+        "T007"
+      ],
+      "allocated_person_days": {
+        "A": 0.0,
+        "B": 1.0,
+        "C": 0.3333333333333333
+      },
+      "allocated_exact": {
+        "A": "0",
+        "B": "1",
+        "C": "1/3"
+      }
+    },
+    {
+      "work_day": 19,
+      "tasks": [
+        "T008"
+      ],
+      "allocated_person_days": {
+        "A": 1.0,
+        "B": 1.0,
+        "C": 0.0
+      },
+      "allocated_exact": {
+        "A": "1",
+        "B": "1",
+        "C": "0"
+      }
+    },
+    {
+      "work_day": 20,
+      "tasks": [
+        "T008"
+      ],
+      "allocated_person_days": {
+        "A": 1.0,
+        "B": 1.0,
+        "C": 0.0
+      },
+      "allocated_exact": {
+        "A": "1",
+        "B": "1",
+        "C": "0"
+      }
+    },
+    {
+      "work_day": 21,
+      "tasks": [
+        "T009"
+      ],
+      "allocated_person_days": {
+        "A": 1.0,
+        "B": 0.3333333333333333,
+        "C": 0.0
+      },
+      "allocated_exact": {
+        "A": "1",
+        "B": "1/3",
+        "C": "0"
+      }
+    },
+    {
+      "work_day": 22,
+      "tasks": [
+        "T009"
+      ],
+      "allocated_person_days": {
+        "A": 1.0,
+        "B": 0.3333333333333333,
+        "C": 0.0
+      },
+      "allocated_exact": {
+        "A": "1",
+        "B": "1/3",
+        "C": "0"
+      }
+    },
+    {
+      "work_day": 23,
+      "tasks": [
+        "T009"
+      ],
+      "allocated_person_days": {
+        "A": 1.0,
+        "B": 0.3333333333333333,
+        "C": 0.0
+      },
+      "allocated_exact": {
+        "A": "1",
+        "B": "1/3",
+        "C": "0"
+      }
+    },
+    {
+      "work_day": 24,
+      "tasks": [
+        "T010"
+      ],
+      "allocated_person_days": {
+        "A": 1.0,
+        "B": 0.0,
+        "C": 0.5
+      },
+      "allocated_exact": {
+        "A": "1",
+        "B": "0",
+        "C": "1/2"
+      }
+    },
+    {
+      "work_day": 25,
+      "tasks": [
+        "T010"
+      ],
+      "allocated_person_days": {
+        "A": 1.0,
+        "B": 0.0,
+        "C": 0.5
+      },
+      "allocated_exact": {
+        "A": "1",
+        "B": "0",
+        "C": "1/2"
+      }
+    },
+    {
+      "work_day": 26,
+      "tasks": [
+        "T011",
+        "T012"
+      ],
+      "allocated_person_days": {
+        "A": 1.0,
+        "B": 0.3333333333333333,
+        "C": 0.5
+      },
+      "allocated_exact": {
+        "A": "1",
+        "B": "1/3",
+        "C": "1/2"
+      }
+    },
+    {
+      "work_day": 27,
+      "tasks": [
+        "T011",
+        "T012"
+      ],
+      "allocated_person_days": {
+        "A": 1.0,
+        "B": 0.3333333333333333,
+        "C": 0.5
+      },
+      "allocated_exact": {
+        "A": "1",
+        "B": "1/3",
+        "C": "1/2"
+      }
+    },
+    {
+      "work_day": 28,
+      "tasks": [
+        "T011",
+        "T012"
+      ],
+      "allocated_person_days": {
+        "A": 1.0,
+        "B": 0.3333333333333333,
+        "C": 0.5
+      },
+      "allocated_exact": {
+        "A": "1",
+        "B": "1/3",
+        "C": "1/2"
+      }
+    },
+    {
+      "work_day": 29,
+      "tasks": [
+        "T011"
+      ],
+      "allocated_person_days": {
+        "A": 0.0,
+        "B": 0.0,
+        "C": 0.5
+      },
+      "allocated_exact": {
+        "A": "0",
+        "B": "0",
+        "C": "1/2"
+      }
+    },
+    {
+      "work_day": 30,
+      "tasks": [
+        "T011"
+      ],
+      "allocated_person_days": {
+        "A": 0.0,
+        "B": 0.0,
+        "C": 0.5
+      },
+      "allocated_exact": {
+        "A": "0",
+        "B": "0",
+        "C": "1/2"
+      }
+    },
+    {
+      "work_day": 31,
+      "tasks": [
+        "T011"
+      ],
+      "allocated_person_days": {
+        "A": 0.0,
+        "B": 0.0,
+        "C": 0.5
+      },
+      "allocated_exact": {
+        "A": "0",
+        "B": "0",
+        "C": "1/2"
+      }
+    },
+    {
+      "work_day": 32,
+      "tasks": [
+        "T013"
+      ],
+      "allocated_person_days": {
+        "A": 0.0,
+        "B": 1.0,
+        "C": 0.0
+      },
+      "allocated_exact": {
+        "A": "0",
+        "B": "1",
+        "C": "0"
+      }
+    },
+    {
+      "work_day": 33,
+      "tasks": [
+        "T013"
+      ],
+      "allocated_person_days": {
+        "A": 0.0,
+        "B": 1.0,
+        "C": 0.0
+      },
+      "allocated_exact": {
+        "A": "0",
+        "B": "1",
+        "C": "0"
+      }
+    },
+    {
+      "work_day": 34,
+      "tasks": [
+        "T013"
+      ],
+      "allocated_person_days": {
+        "A": 0.0,
+        "B": 1.0,
+        "C": 0.0
+      },
+      "allocated_exact": {
+        "A": "0",
+        "B": "1",
+        "C": "0"
+      }
+    },
+    {
+      "work_day": 35,
+      "tasks": [
+        "T014"
+      ],
+      "allocated_person_days": {
+        "A": 0.0,
+        "B": 1.0,
+        "C": 0.5
+      },
+      "allocated_exact": {
+        "A": "0",
+        "B": "1",
+        "C": "1/2"
+      }
+    },
+    {
+      "work_day": 36,
+      "tasks": [
+        "T014"
+      ],
+      "allocated_person_days": {
+        "A": 0.0,
+        "B": 1.0,
+        "C": 0.5
+      },
+      "allocated_exact": {
+        "A": "0",
+        "B": "1",
+        "C": "1/2"
+      }
+    },
+    {
+      "work_day": 37,
+      "tasks": [
+        "T015"
+      ],
+      "allocated_person_days": {
+        "A": 0.0,
+        "B": 1.0,
+        "C": 0.3333333333333333
+      },
+      "allocated_exact": {
+        "A": "0",
+        "B": "1",
+        "C": "1/3"
+      }
+    },
+    {
+      "work_day": 38,
+      "tasks": [
+        "T015"
+      ],
+      "allocated_person_days": {
+        "A": 0.0,
+        "B": 1.0,
+        "C": 0.3333333333333333
+      },
+      "allocated_exact": {
+        "A": "0",
+        "B": "1",
+        "C": "1/3"
+      }
+    },
+    {
+      "work_day": 39,
+      "tasks": [
+        "T015"
+      ],
+      "allocated_person_days": {
+        "A": 0.0,
+        "B": 1.0,
+        "C": 0.3333333333333333
+      },
+      "allocated_exact": {
+        "A": "0",
+        "B": "1",
+        "C": "1/3"
+      }
+    },
+    {
+      "work_day": 40,
+      "tasks": [
+        "T016"
+      ],
+      "allocated_person_days": {
+        "A": 1.0,
+        "B": 1.0,
+        "C": 0.0
+      },
+      "allocated_exact": {
+        "A": "1",
+        "B": "1",
+        "C": "0"
+      }
+    },
+    {
+      "work_day": 41,
+      "tasks": [
+        "T016"
+      ],
+      "allocated_person_days": {
+        "A": 1.0,
+        "B": 1.0,
+        "C": 0.0
+      },
+      "allocated_exact": {
+        "A": "1",
+        "B": "1",
+        "C": "0"
+      }
+    },
+    {
+      "work_day": 42,
+      "tasks": [
+        "T017"
+      ],
+      "allocated_person_days": {
+        "A": 0.5,
+        "B": 1.0,
+        "C": 0.0
+      },
+      "allocated_exact": {
+        "A": "1/2",
+        "B": "1",
+        "C": "0"
+      }
+    },
+    {
+      "work_day": 43,
+      "tasks": [
+        "T017"
+      ],
+      "allocated_person_days": {
+        "A": 0.5,
+        "B": 1.0,
+        "C": 0.0
+      },
+      "allocated_exact": {
+        "A": "1/2",
+        "B": "1",
+        "C": "0"
+      }
+    },
+    {
+      "work_day": 44,
+      "tasks": [
+        "T018"
+      ],
+      "allocated_person_days": {
+        "A": 1.0,
+        "B": 0.0,
+        "C": 0.3333333333333333
+      },
+      "allocated_exact": {
+        "A": "1",
+        "B": "0",
+        "C": "1/3"
+      }
+    },
+    {
+      "work_day": 45,
+      "tasks": [
+        "T018"
+      ],
+      "allocated_person_days": {
+        "A": 1.0,
+        "B": 0.0,
+        "C": 0.3333333333333333
+      },
+      "allocated_exact": {
+        "A": "1",
+        "B": "0",
+        "C": "1/3"
+      }
+    },
+    {
+      "work_day": 46,
+      "tasks": [
+        "T018"
+      ],
+      "allocated_person_days": {
+        "A": 1.0,
+        "B": 0.0,
+        "C": 0.3333333333333333
+      },
+      "allocated_exact": {
+        "A": "1",
+        "B": "0",
+        "C": "1/3"
+      }
+    },
+    {
+      "work_day": 47,
+      "tasks": [
+        "T019"
+      ],
+      "allocated_person_days": {
+        "A": 1.0,
+        "B": 0.0,
+        "C": 0.3333333333333333
+      },
+      "allocated_exact": {
+        "A": "1",
+        "B": "0",
+        "C": "1/3"
+      }
+    },
+    {
+      "work_day": 48,
+      "tasks": [
+        "T019"
+      ],
+      "allocated_person_days": {
+        "A": 1.0,
+        "B": 0.0,
+        "C": 0.3333333333333333
+      },
+      "allocated_exact": {
+        "A": "1",
+        "B": "0",
+        "C": "1/3"
+      }
+    },
+    {
+      "work_day": 49,
+      "tasks": [
+        "T019"
+      ],
+      "allocated_person_days": {
+        "A": 1.0,
+        "B": 0.0,
+        "C": 0.3333333333333333
+      },
+      "allocated_exact": {
+        "A": "1",
+        "B": "0",
+        "C": "1/3"
+      }
+    },
+    {
+      "work_day": 50,
+      "tasks": [
+        "T020"
+      ],
+      "allocated_person_days": {
+        "A": 0.5,
+        "B": 0.5,
+        "C": 0.5
+      },
+      "allocated_exact": {
+        "A": "1/2",
+        "B": "1/2",
+        "C": "1/2"
+      }
+    },
+    {
+      "work_day": 51,
+      "tasks": [
+        "T020"
+      ],
+      "allocated_person_days": {
+        "A": 0.5,
+        "B": 0.5,
+        "C": 0.5
+      },
+      "allocated_exact": {
+        "A": "1/2",
+        "B": "1/2",
+        "C": "1/2"
+      }
+    },
+    {
+      "work_day": 52,
+      "tasks": [
+        "T021"
+      ],
+      "allocated_person_days": {
+        "A": 0.0,
+        "B": 1.0,
+        "C": 0.3333333333333333
+      },
+      "allocated_exact": {
+        "A": "0",
+        "B": "1",
+        "C": "1/3"
+      }
+    },
+    {
+      "work_day": 53,
+      "tasks": [
+        "T021"
+      ],
+      "allocated_person_days": {
+        "A": 0.0,
+        "B": 1.0,
+        "C": 0.3333333333333333
+      },
+      "allocated_exact": {
+        "A": "0",
+        "B": "1",
+        "C": "1/3"
+      }
+    },
+    {
+      "work_day": 54,
+      "tasks": [
+        "T021"
+      ],
+      "allocated_person_days": {
+        "A": 0.0,
+        "B": 1.0,
+        "C": 0.3333333333333333
+      },
+      "allocated_exact": {
+        "A": "0",
+        "B": "1",
+        "C": "1/3"
+      }
+    },
+    {
+      "work_day": 55,
+      "tasks": [
+        "T023"
+      ],
+      "allocated_person_days": {
+        "A": 1.0,
+        "B": 1.0,
+        "C": 0.0
+      },
+      "allocated_exact": {
+        "A": "1",
+        "B": "1",
+        "C": "0"
+      }
+    },
+    {
+      "work_day": 56,
+      "tasks": [
+        "T023"
+      ],
+      "allocated_person_days": {
+        "A": 1.0,
+        "B": 1.0,
+        "C": 0.0
+      },
+      "allocated_exact": {
+        "A": "1",
+        "B": "1",
+        "C": "0"
+      }
+    },
+    {
+      "work_day": 57,
+      "tasks": [
+        "T024"
+      ],
+      "allocated_person_days": {
+        "A": 1.0,
+        "B": 0.0,
+        "C": 0.3333333333333333
+      },
+      "allocated_exact": {
+        "A": "1",
+        "B": "0",
+        "C": "1/3"
+      }
+    },
+    {
+      "work_day": 58,
+      "tasks": [
+        "T024"
+      ],
+      "allocated_person_days": {
+        "A": 1.0,
+        "B": 0.0,
+        "C": 0.3333333333333333
+      },
+      "allocated_exact": {
+        "A": "1",
+        "B": "0",
+        "C": "1/3"
+      }
+    },
+    {
+      "work_day": 59,
+      "tasks": [
+        "T024"
+      ],
+      "allocated_person_days": {
+        "A": 1.0,
+        "B": 0.0,
+        "C": 0.3333333333333333
+      },
+      "allocated_exact": {
+        "A": "1",
+        "B": "0",
+        "C": "1/3"
+      }
+    },
+    {
+      "work_day": 60,
+      "tasks": [
+        "T022"
+      ],
+      "allocated_person_days": {
+        "A": 0.0,
+        "B": 1.0,
+        "C": 0.5
+      },
+      "allocated_exact": {
+        "A": "0",
+        "B": "1",
+        "C": "1/2"
+      }
+    },
+    {
+      "work_day": 61,
+      "tasks": [
+        "T022"
+      ],
+      "allocated_person_days": {
+        "A": 0.0,
+        "B": 1.0,
+        "C": 0.5
+      },
+      "allocated_exact": {
+        "A": "0",
+        "B": "1",
+        "C": "1/2"
+      }
+    },
+    {
+      "work_day": 62,
+      "tasks": [
+        "T025"
+      ],
+      "allocated_person_days": {
+        "A": 1.0,
+        "B": 0.0,
+        "C": 0.3333333333333333
+      },
+      "allocated_exact": {
+        "A": "1",
+        "B": "0",
+        "C": "1/3"
+      }
+    },
+    {
+      "work_day": 63,
+      "tasks": [
+        "T025"
+      ],
+      "allocated_person_days": {
+        "A": 1.0,
+        "B": 0.0,
+        "C": 0.3333333333333333
+      },
+      "allocated_exact": {
+        "A": "1",
+        "B": "0",
+        "C": "1/3"
+      }
+    },
+    {
+      "work_day": 64,
+      "tasks": [
+        "T025"
+      ],
+      "allocated_person_days": {
+        "A": 1.0,
+        "B": 0.0,
+        "C": 0.3333333333333333
+      },
+      "allocated_exact": {
+        "A": "1",
+        "B": "0",
+        "C": "1/3"
+      }
+    },
+    {
+      "work_day": 65,
+      "tasks": [
+        "T026"
+      ],
+      "allocated_person_days": {
+        "A": 1.0,
+        "B": 0.5,
+        "C": 0.0
+      },
+      "allocated_exact": {
+        "A": "1",
+        "B": "1/2",
+        "C": "0"
+      }
+    },
+    {
+      "work_day": 66,
+      "tasks": [
+        "T026"
+      ],
+      "allocated_person_days": {
+        "A": 1.0,
+        "B": 0.5,
+        "C": 0.0
+      },
+      "allocated_exact": {
+        "A": "1",
+        "B": "1/2",
+        "C": "0"
+      }
+    },
+    {
+      "work_day": 67,
+      "tasks": [
+        "T027"
+      ],
+      "allocated_person_days": {
+        "A": 0.0,
+        "B": 1.0,
+        "C": 0.5
+      },
+      "allocated_exact": {
+        "A": "0",
+        "B": "1",
+        "C": "1/2"
+      }
+    },
+    {
+      "work_day": 68,
+      "tasks": [
+        "T027"
+      ],
+      "allocated_person_days": {
+        "A": 0.0,
+        "B": 1.0,
+        "C": 0.5
+      },
+      "allocated_exact": {
+        "A": "0",
+        "B": "1",
+        "C": "1/2"
+      }
+    },
+    {
+      "work_day": 69,
+      "tasks": [
+        "T028"
+      ],
+      "allocated_person_days": {
+        "A": 1.0,
+        "B": 0.3333333333333333,
+        "C": 0.0
+      },
+      "allocated_exact": {
+        "A": "1",
+        "B": "1/3",
+        "C": "0"
+      }
+    },
+    {
+      "work_day": 70,
+      "tasks": [
+        "T028"
+      ],
+      "allocated_person_days": {
+        "A": 1.0,
+        "B": 0.3333333333333333,
+        "C": 0.0
+      },
+      "allocated_exact": {
+        "A": "1",
+        "B": "1/3",
+        "C": "0"
+      }
+    },
+    {
+      "work_day": 71,
+      "tasks": [
+        "T028"
+      ],
+      "allocated_person_days": {
+        "A": 1.0,
+        "B": 0.3333333333333333,
+        "C": 0.0
+      },
+      "allocated_exact": {
+        "A": "1",
+        "B": "1/3",
+        "C": "0"
+      }
+    },
+    {
+      "work_day": 72,
+      "tasks": [
+        "T029"
+      ],
+      "allocated_person_days": {
+        "A": 1.0,
+        "B": 0.3333333333333333,
+        "C": 0.0
+      },
+      "allocated_exact": {
+        "A": "1",
+        "B": "1/3",
+        "C": "0"
+      }
+    },
+    {
+      "work_day": 73,
+      "tasks": [
+        "T029"
+      ],
+      "allocated_person_days": {
+        "A": 1.0,
+        "B": 0.3333333333333333,
+        "C": 0.0
+      },
+      "allocated_exact": {
+        "A": "1",
+        "B": "1/3",
+        "C": "0"
+      }
+    },
+    {
+      "work_day": 74,
+      "tasks": [
+        "T029"
+      ],
+      "allocated_person_days": {
+        "A": 1.0,
+        "B": 0.3333333333333333,
+        "C": 0.0
+      },
+      "allocated_exact": {
+        "A": "1",
+        "B": "1/3",
+        "C": "0"
+      }
+    },
+    {
+      "work_day": 75,
+      "tasks": [
+        "T030"
+      ],
+      "allocated_person_days": {
+        "A": 1.0,
+        "B": 0.3333333333333333,
+        "C": 0.3333333333333333
+      },
+      "allocated_exact": {
+        "A": "1",
+        "B": "1/3",
+        "C": "1/3"
+      }
+    },
+    {
+      "work_day": 76,
+      "tasks": [
+        "T030"
+      ],
+      "allocated_person_days": {
+        "A": 1.0,
+        "B": 0.3333333333333333,
+        "C": 0.3333333333333333
+      },
+      "allocated_exact": {
+        "A": "1",
+        "B": "1/3",
+        "C": "1/3"
+      }
+    },
+    {
+      "work_day": 77,
+      "tasks": [
+        "T030"
+      ],
+      "allocated_person_days": {
+        "A": 1.0,
+        "B": 0.3333333333333333,
+        "C": 0.3333333333333333
+      },
+      "allocated_exact": {
+        "A": "1",
+        "B": "1/3",
+        "C": "1/3"
+      }
+    },
+    {
+      "work_day": 78,
+      "tasks": [
+        "T031"
+      ],
+      "allocated_person_days": {
+        "A": 1.0,
+        "B": 0.3333333333333333,
+        "C": 0.3333333333333333
+      },
+      "allocated_exact": {
+        "A": "1",
+        "B": "1/3",
+        "C": "1/3"
+      }
+    },
+    {
+      "work_day": 79,
+      "tasks": [
+        "T031"
+      ],
+      "allocated_person_days": {
+        "A": 1.0,
+        "B": 0.3333333333333333,
+        "C": 0.3333333333333333
+      },
+      "allocated_exact": {
+        "A": "1",
+        "B": "1/3",
+        "C": "1/3"
+      }
+    },
+    {
+      "work_day": 80,
+      "tasks": [
+        "T031"
+      ],
+      "allocated_person_days": {
+        "A": 1.0,
+        "B": 0.3333333333333333,
+        "C": 0.3333333333333333
+      },
+      "allocated_exact": {
+        "A": "1",
+        "B": "1/3",
+        "C": "1/3"
+      }
+    },
+    {
+      "work_day": 81,
+      "tasks": [
+        "T032"
+      ],
+      "allocated_person_days": {
+        "A": 0.5,
+        "B": 1.0,
+        "C": 0.5
+      },
+      "allocated_exact": {
+        "A": "1/2",
+        "B": "1",
+        "C": "1/2"
+      }
+    },
+    {
+      "work_day": 82,
+      "tasks": [
+        "T032"
+      ],
+      "allocated_person_days": {
+        "A": 0.5,
+        "B": 1.0,
+        "C": 0.5
+      },
+      "allocated_exact": {
+        "A": "1/2",
+        "B": "1",
+        "C": "1/2"
+      }
+    },
+    {
+      "work_day": 83,
+      "tasks": [
+        "T033"
+      ],
+      "allocated_person_days": {
+        "A": 0.5,
+        "B": 1.0,
+        "C": 0.5
+      },
+      "allocated_exact": {
+        "A": "1/2",
+        "B": "1",
+        "C": "1/2"
+      }
+    },
+    {
+      "work_day": 84,
+      "tasks": [
+        "T033"
+      ],
+      "allocated_person_days": {
+        "A": 0.5,
+        "B": 1.0,
+        "C": 0.5
+      },
+      "allocated_exact": {
+        "A": "1/2",
+        "B": "1",
+        "C": "1/2"
+      }
+    },
+    {
+      "work_day": 85,
+      "tasks": [
+        "T034"
+      ],
+      "allocated_person_days": {
+        "A": 0.0,
+        "B": 0.75,
+        "C": 0.5
+      },
+      "allocated_exact": {
+        "A": "0",
+        "B": "3/4",
+        "C": "1/2"
+      }
+    },
+    {
+      "work_day": 86,
+      "tasks": [
+        "T034"
+      ],
+      "allocated_person_days": {
+        "A": 0.0,
+        "B": 0.75,
+        "C": 0.5
+      },
+      "allocated_exact": {
+        "A": "0",
+        "B": "3/4",
+        "C": "1/2"
+      }
+    },
+    {
+      "work_day": 87,
+      "tasks": [
+        "T034"
+      ],
+      "allocated_person_days": {
+        "A": 0.0,
+        "B": 0.75,
+        "C": 0.5
+      },
+      "allocated_exact": {
+        "A": "0",
+        "B": "3/4",
+        "C": "1/2"
+      }
+    },
+    {
+      "work_day": 88,
+      "tasks": [
+        "T034"
+      ],
+      "allocated_person_days": {
+        "A": 0.0,
+        "B": 0.75,
+        "C": 0.5
+      },
+      "allocated_exact": {
+        "A": "0",
+        "B": "3/4",
+        "C": "1/2"
+      }
+    },
+    {
+      "work_day": 89,
+      "tasks": [
+        "T035"
+      ],
+      "allocated_person_days": {
+        "A": 0.0,
+        "B": 1.0,
+        "C": 0.3333333333333333
+      },
+      "allocated_exact": {
+        "A": "0",
+        "B": "1",
+        "C": "1/3"
+      }
+    },
+    {
+      "work_day": 90,
+      "tasks": [
+        "T035"
+      ],
+      "allocated_person_days": {
+        "A": 0.0,
+        "B": 1.0,
+        "C": 0.3333333333333333
+      },
+      "allocated_exact": {
+        "A": "0",
+        "B": "1",
+        "C": "1/3"
+      }
+    },
+    {
+      "work_day": 91,
+      "tasks": [
+        "T035"
+      ],
+      "allocated_person_days": {
+        "A": 0.0,
+        "B": 1.0,
+        "C": 0.3333333333333333
+      },
+      "allocated_exact": {
+        "A": "0",
+        "B": "1",
+        "C": "1/3"
+      }
+    },
+    {
+      "work_day": 92,
+      "tasks": [
+        "T036"
+      ],
+      "allocated_person_days": {
+        "A": 1.0,
+        "B": 0.3333333333333333,
+        "C": 0.0
+      },
+      "allocated_exact": {
+        "A": "1",
+        "B": "1/3",
+        "C": "0"
+      }
+    },
+    {
+      "work_day": 93,
+      "tasks": [
+        "T036"
+      ],
+      "allocated_person_days": {
+        "A": 1.0,
+        "B": 0.3333333333333333,
+        "C": 0.0
+      },
+      "allocated_exact": {
+        "A": "1",
+        "B": "1/3",
+        "C": "0"
+      }
+    },
+    {
+      "work_day": 94,
+      "tasks": [
+        "T036"
+      ],
+      "allocated_person_days": {
+        "A": 1.0,
+        "B": 0.3333333333333333,
+        "C": 0.0
+      },
+      "allocated_exact": {
+        "A": "1",
+        "B": "1/3",
+        "C": "0"
+      }
+    },
+    {
+      "work_day": 95,
+      "tasks": [
+        "T037"
+      ],
+      "allocated_person_days": {
+        "A": 1.0,
+        "B": 0.5,
+        "C": 0.5
+      },
+      "allocated_exact": {
+        "A": "1",
+        "B": "1/2",
+        "C": "1/2"
+      }
+    },
+    {
+      "work_day": 96,
+      "tasks": [
+        "T037"
+      ],
+      "allocated_person_days": {
+        "A": 1.0,
+        "B": 0.5,
+        "C": 0.5
+      },
+      "allocated_exact": {
+        "A": "1",
+        "B": "1/2",
+        "C": "1/2"
+      }
+    },
+    {
+      "work_day": 97,
+      "tasks": [
+        "T038"
+      ],
+      "allocated_person_days": {
+        "A": 1.0,
+        "B": 1.0,
+        "C": 0.0
+      },
+      "allocated_exact": {
+        "A": "1",
+        "B": "1",
+        "C": "0"
+      }
+    },
+    {
+      "work_day": 98,
+      "tasks": [
+        "T038"
+      ],
+      "allocated_person_days": {
+        "A": 1.0,
+        "B": 1.0,
+        "C": 0.0
+      },
+      "allocated_exact": {
+        "A": "1",
+        "B": "1",
+        "C": "0"
+      }
+    },
+    {
+      "work_day": 99,
+      "tasks": [
+        "T039"
+      ],
+      "allocated_person_days": {
+        "A": 1.0,
+        "B": 0.5,
+        "C": 0.5
+      },
+      "allocated_exact": {
+        "A": "1",
+        "B": "1/2",
+        "C": "1/2"
+      }
+    },
+    {
+      "work_day": 100,
+      "tasks": [
+        "T039"
+      ],
+      "allocated_person_days": {
+        "A": 1.0,
+        "B": 0.5,
+        "C": 0.5
+      },
+      "allocated_exact": {
+        "A": "1",
+        "B": "1/2",
+        "C": "1/2"
+      }
+    },
+    {
+      "work_day": 101,
+      "tasks": [
+        "T040"
+      ],
+      "allocated_person_days": {
+        "A": 0.16666666666666666,
+        "B": 0.16666666666666666,
+        "C": 0.5
+      },
+      "allocated_exact": {
+        "A": "1/6",
+        "B": "1/6",
+        "C": "1/2"
+      }
+    },
+    {
+      "work_day": 102,
+      "tasks": [
+        "T040"
+      ],
+      "allocated_person_days": {
+        "A": 0.16666666666666666,
+        "B": 0.16666666666666666,
+        "C": 0.5
+      },
+      "allocated_exact": {
+        "A": "1/6",
+        "B": "1/6",
+        "C": "1/2"
+      }
+    },
+    {
+      "work_day": 103,
+      "tasks": [
+        "T040"
+      ],
+      "allocated_person_days": {
+        "A": 0.16666666666666666,
+        "B": 0.16666666666666666,
+        "C": 0.5
+      },
+      "allocated_exact": {
+        "A": "1/6",
+        "B": "1/6",
+        "C": "1/2"
+      }
+    },
+    {
+      "work_day": 104,
+      "tasks": [
+        "T040"
+      ],
+      "allocated_person_days": {
+        "A": 0.16666666666666666,
+        "B": 0.16666666666666666,
+        "C": 0.5
+      },
+      "allocated_exact": {
+        "A": "1/6",
+        "B": "1/6",
+        "C": "1/2"
+      }
+    },
+    {
+      "work_day": 105,
+      "tasks": [
+        "T040"
+      ],
+      "allocated_person_days": {
+        "A": 0.16666666666666666,
+        "B": 0.16666666666666666,
+        "C": 0.5
+      },
+      "allocated_exact": {
+        "A": "1/6",
+        "B": "1/6",
+        "C": "1/2"
+      }
+    },
+    {
+      "work_day": 106,
+      "tasks": [
+        "T040"
+      ],
+      "allocated_person_days": {
+        "A": 0.16666666666666666,
+        "B": 0.16666666666666666,
+        "C": 0.5
+      },
+      "allocated_exact": {
+        "A": "1/6",
+        "B": "1/6",
+        "C": "1/2"
+      }
+    },
+    {
+      "work_day": 107,
+      "tasks": [
+        "T041"
+      ],
+      "allocated_person_days": {
+        "A": 0.5,
+        "B": 1.0,
+        "C": 0.5
+      },
+      "allocated_exact": {
+        "A": "1/2",
+        "B": "1",
+        "C": "1/2"
+      }
+    },
+    {
+      "work_day": 108,
+      "tasks": [
+        "T041"
+      ],
+      "allocated_person_days": {
+        "A": 0.5,
+        "B": 1.0,
+        "C": 0.5
+      },
+      "allocated_exact": {
+        "A": "1/2",
+        "B": "1",
+        "C": "1/2"
+      }
+    },
+    {
+      "work_day": 109,
+      "tasks": [
+        "T042"
+      ],
+      "allocated_person_days": {
+        "A": 0.0,
+        "B": 1.0,
+        "C": 0.0
+      },
+      "allocated_exact": {
+        "A": "0",
+        "B": "1",
+        "C": "0"
+      }
+    },
+    {
+      "work_day": 110,
+      "tasks": [
+        "T042"
+      ],
+      "allocated_person_days": {
+        "A": 0.0,
+        "B": 1.0,
+        "C": 0.0
+      },
+      "allocated_exact": {
+        "A": "0",
+        "B": "1",
+        "C": "0"
+      }
+    },
+    {
+      "work_day": 111,
+      "tasks": [
+        "T042"
+      ],
+      "allocated_person_days": {
+        "A": 0.0,
+        "B": 1.0,
+        "C": 0.0
+      },
+      "allocated_exact": {
+        "A": "0",
+        "B": "1",
+        "C": "0"
+      }
+    },
+    {
+      "work_day": 112,
+      "tasks": [
+        "T042"
+      ],
+      "allocated_person_days": {
+        "A": 0.0,
+        "B": 1.0,
+        "C": 0.0
+      },
+      "allocated_exact": {
+        "A": "0",
+        "B": "1",
+        "C": "0"
+      }
+    }
+  ],
+  "validation": {
+    "task_ids_unique": true,
+    "task_count": 42,
+    "acyclic_dependencies": true,
+    "all_FS_dependencies_satisfied": true,
+    "all_daily_role_capacities_satisfied": true,
+    "all_task_role_efforts_reconcile": true,
+    "total_person_days": 159,
+    "CSV_UTF8_BOM": true,
+    "stage_ranges_match_expected": true
+  }
+}

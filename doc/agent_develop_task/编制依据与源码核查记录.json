@@ -1,0 +1,78 @@
+{
+  "prepared_on": "2026-10-23",
+  "purpose": "开发计划编制时的只读证据索引；不是仿真实验或运行通过记录",
+  "documents": [
+    {
+      "path": "network-expert-diagrams/智算网络专家Agent_分层技能复用与仿真驱动设计方案.md",
+      "bytes": 63709,
+      "sha256": "7cd7e2a528de6a58273eea3d50bddea1e21f75c9562cd2bca34f575946e2e42f"
+    },
+    {
+      "path": "network-expert-diagrams/智算网络专家Agent_项目汇报简版.md",
+      "bytes": 18630,
+      "sha256": "eb78f9c44ba4eaab41fd61ac8683fbe29688adfded4e459ad76c3c1600f513dd"
+    },
+    {
+      "path": "network-expert-diagrams/Agent驱动数据中心网络CC与LB自主调优及技能复用可行性报告.md",
+      "bytes": 94435,
+      "sha256": "2dfe1a837155a72f82ed781cd1b4ed41c47715ed249bcde009e8b9a5d311be5e"
+    },
+    {
+      "path": "network-expert-diagrams/RDMA多路径负载均衡方案调研报告.md",
+      "bytes": 118155,
+      "sha256": "a56499fcff55757cc522d12264fec7b3af8990a7f28794abd4dedfbfaeb1d306"
+    }
+  ],
+  "repositories": [
+    {
+      "local_path": "/home/gtx/rdma_project/ns-allinone-3.19/ns-3.19",
+      "remote": "https://github.com/zbdhz/conweave-ns3-rdma-newly.git",
+      "head": "236a801a00e35de9078635e04acae2f701c21ded",
+      "working_tree_status": "M .gitignore\n M mix/.history\n M run.py\n?? analysis/compare_cc_analysis.py\n?? analysis/compare_cc_flow_size.py\n?? mix/.history.bak\n?? mix/.history.bak.20260703\n?? scratch/compare_cc.sh\n?? scratch/compare_cc_flow_size.sh\n?? traffic_gen/fixed_large.txt\n?? traffic_gen/fixed_small.txt",
+      "inspected_files": [
+        {
+          "path": "run.py",
+          "sha256": "dd0537930e35d11c94c3a4d391e93140f36767728e2171ba5a4d12a244783fb1"
+        },
+        {
+          "path": "scratch/network-load-balance.cc",
+          "sha256": "01965232868ace08d02b140de3ceb214adfde95f9009b63b6c1c84e65ea8e55d"
+        },
+        {
+          "path": "src/point-to-point/model/rdma-hw.cc",
+          "sha256": "7a717ddc9da726089670e46e2fe467142e9b18665760938142831c4f9ee25785"
+        },
+        {
+          "path": "src/point-to-point/model/switch-mmu.cc",
+          "sha256": "707582a73ef7cc5b41cb848b8285efb524532cc47a1c796cc5566c9d6aba5527"
+        },
+        {
+          "path": "src/point-to-point/model/conweave-routing.h",
+          "sha256": "11f448c191b18d1bc5203332a4e5098a9cb5b72d6dc6fcbe6cba5443a1aa6770"
+        }
+      ]
+    },
+    {
+      "local_path": "/home/gtx/rdma_project/ns-3-alibabacloud",
+      "remote": "https://github.com/zbdhz/ns-3-alibabacloud.git",
+      "head": "7e3cb5b88c99abcb582c5abc3919484a4805111b",
+      "working_tree_status": "",
+      "inspected_files": [
+        {
+          "path": "simulation/VERSION",
+          "sha256": "5d63412ee89df99b53056e4d3030d4f6663c9b071f72fa629a1e679d80b7092f"
+        },
+        {
+          "path": "simulation/src/point-to-point/model/rdma-hw.cc",
+          "sha256": "62bb7dfb4a56ab7da3757718569767b54918ecac9e9ee4c3207fb2b51a08e944"
+        },
+        {
+          "path": "simulation/src/point-to-point/model/switch-mmu.cc",
+          "sha256": "7450584de05056b1cd246d2ee546960e3ad66f16b44e309052d5186325487943"
+        }
+      ],
+      "simai_lab_baseline_ref": "3e0c7c1bfbbe9f77890ddcf5e5b9c79fc6dd7437"
+    }
+  ],
+  "verification_scope": "阅读资料和源码、核对本地Git状态；未运行仿真、未构建后端、未修改后端源码"
+}

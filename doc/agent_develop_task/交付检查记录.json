@@ -1,0 +1,83 @@
+{
+  "checked_on": "2026-10-23",
+  "scope": "文档、链接、工作量及排期的静态校验；未构建或运行仿真，未验证性能收益",
+  "checks": {
+    "local_links": 17,
+    "local_links_valid": true,
+    "markdown_fences_balanced": true,
+    "json_examples_parse": true,
+    "task_count": 42,
+    "net_person_days": 159,
+    "role_person_days": {
+      "B": 64,
+      "C": 32,
+      "A": 63
+    },
+    "phase_person_days": {
+      "P0": 20,
+      "P1": 25,
+      "P2": 25,
+      "P3": 25,
+      "P4": 35,
+      "P5": 29
+    },
+    "dependencies_acyclic": true,
+    "all_finish_to_start_constraints_valid": true,
+    "daily_role_capacity_valid": true,
+    "precedence_lower_bound_work_days": 97,
+    "resource_feasible_work_days": 112,
+    "csv_schedule_json_consistent": true,
+    "csv_utf8_bom": true,
+    "plan_numbered_sections": 19,
+    "original_document_hashes_unchanged": [
+      {
+        "path": "network-expert-diagrams/智算网络专家Agent_分层技能复用与仿真驱动设计方案.md",
+        "sha256_matches": true
+      },
+      {
+        "path": "network-expert-diagrams/智算网络专家Agent_项目汇报简版.md",
+        "sha256_matches": true
+      },
+      {
+        "path": "network-expert-diagrams/Agent驱动数据中心网络CC与LB自主调优及技能复用可行性报告.md",
+        "sha256_matches": true
+      },
+      {
+        "path": "network-expert-diagrams/RDMA多路径负载均衡方案调研报告.md",
+        "sha256_matches": true
+      }
+    ],
+    "audited_source_files_hash_unchanged_count": 8
+  },
+  "artifacts": [
+    {
+      "path": "README.md",
+      "bytes": 1982,
+      "sha256": "127fd110d47ac5fc2ca9827084781d0b34da97dd34221d600d2bd14d16c81b17"
+    },
+    {
+      "path": "开发计划/智算网络专家_详细开发计划.md",
+      "bytes": 60219,
+      "sha256": "8673c654a15145e50e4ebb5a4812d7ff9b2e8dcc57211c64f5374f1a932410ba"
+    },
+    {
+      "path": "开发计划/开发任务拆分.csv",
+      "bytes": 17258,
+      "sha256": "56921400998a25e4b0d1d3dabb8d8e21b6d0a7007fbd029ebc03ba640ae80275"
+    },
+    {
+      "path": "开发计划/排期核算.json",
+      "bytes": 61595,
+      "sha256": "897414d279e2f2420664a5dfab2b506666ba7b019565cd6172a91eb1e129f2e0"
+    },
+    {
+      "path": "开发计划/编制依据与源码核查记录.json",
+      "bytes": 3419,
+      "sha256": "d65db6721c62458fa3f8cc6f4e859391e1500b6bde8d126d88aa4ab1b0dbb3c0"
+    }
+  ],
+  "review_notes": [
+    "完成原设计范围与技术统计独立审阅；已补搜索过程重复、错杀抽样和跨后端覆盖条件",
+    "排期从工作量算术改为FS依赖及每日角色容量校验；可行排程不声称最优"
+  ]
+}
